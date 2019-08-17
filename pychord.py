@@ -15,6 +15,8 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
+from __future__ import print_function
+
 import getopt
 import re
 import string
@@ -55,7 +57,7 @@ def make_pdf_table(chords, text):
     # Always ensure there is at least one space between chords
     #
     idx = 0
-    pairs = zip(chords, text)
+    pairs = list(zip(chords, text))
     for c, t in pairs:
         if idx < (len(pairs) - 1):
             if len(c) > len(t):
@@ -344,8 +346,8 @@ def parse_file(file, format, transpose=None):
             if p["val"] > 0:
                 shift = ((chord_to_offset[transpose] - p["key"]) % 12)
                 break
-        print first_key
-        print transpose
+        print(first_key)
+        print(transpose)
         if transpose in key_norm:
             norm = key_norm[transpose]
         # Check for valid key
@@ -370,10 +372,10 @@ def parse_file(file, format, transpose=None):
             #
             pkey = paragraphs[para_index]["key"]
             if pkey and pkey != first_key:
-                print "==> New %s (%s)" % (pkey, first_key)
+                print("==> New %s (%s)" % (pkey, first_key))
                 first_key = pkey
                 if first_key in key_norm:
-                    print "Switch to %s because of %s" % (key_norm[first_key], first_key)
+                    print("Switch to %s because of %s" % (key_norm[first_key], first_key))
                     norm = key_norm[first_key]
             #
             #norm = key_norm[(paragraphs[para_index]["key"] % 12)]
@@ -431,7 +433,7 @@ def parse_file(file, format, transpose=None):
                     subtitle = args
                     continue
                 else:
-                    print "Unsupported command %s" % (command)
+                    print("Unsupported command %s" % (command))
 
             parts = re.split("\[([^\]]*)\]", line)
             #
@@ -473,11 +475,11 @@ def parse_file(file, format, transpose=None):
                         else:
                             l = (prev_chord_len - chord_pad + 1)
                             if l % 2:
-                                text_line += " " * (l / 2)
+                                text_line += " " * (l // 2)
                             else:
-                                text_line += " " * ((l / 2) - 1)
+                                text_line += " " * ((l // 2) - 1)
                             text_line += "-"
-                            text_line += " " * (l / 2)
+                            text_line += " " * (l // 2)
 
                     # if previous chord was shorter than the text, pad the chord
                     if prev_chord_len < chord_pad:
@@ -533,18 +535,18 @@ def parse_file(file, format, transpose=None):
         doc.build(song)
     # Default to dumping to stdout
     else:
-        print out
+        print(out)
 
 def usage():
-    print "pychord.py [-t <transpose>] <file> ..."
+    print("pychord.py [-t <transpose>] <file> ...")
 
 def main():
     format = "text"
     transpose = None
     try:
         opts, args = getopt.getopt(sys.argv[1:], "f:ht:", ["format=", "help", "transpose="])
-    except getopt.GetoptError, err:
-        print str(err)
+    except getopt.GetoptError as err:
+        print(str(err))
         usage()
         sys.exit(2)
     output = None
